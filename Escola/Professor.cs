@@ -14,7 +14,7 @@ namespace Escola
 
         public Professor()
         {
-        
+
         }
 
         public override void Cadastrar()
@@ -25,18 +25,24 @@ namespace Escola
             Console.WriteLine("Digite a matrícula do Professor:");
             var _idProf = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Digite o endereço do Professor:");
+            /*Fica confuso aqui pedir o endereço do professor e logo apos o código. 
+             * Dá a impressão que a primeira mensagem já se refere a digitar o endereço, Segue sugestão abaixo do que colocar no lugar de "Digite o endereço do Professor" */
 
+            /*Console.WriteLine("\n------Endereço------\n")
+             O \n é utilizado pra quebra de linha.
+             */
+
+            Console.WriteLine("Digite o endereço do Professor:");
             Console.WriteLine("Código do endereço:");
             var _cdEndereco = int.Parse(Console.ReadLine());
 
             Console.WriteLine("Cidade:");
             var _cidade = Console.ReadLine();
 
-            Console.WriteLine("Estado UTF:");
+            Console.WriteLine("Estado UTF:"); /*UTF????*/
             var _estado = Console.ReadLine();
 
-            var estado =_estado.ToUpper();
+            var estado = _estado.ToUpper();
             string padraoUTF = "[A-Z]{2}";
             while (true)
             {
@@ -50,15 +56,15 @@ namespace Escola
                     break;
                 }
             }
-            
+
 
             Console.WriteLine("Logradouro:");
             var _logradouro = Console.ReadLine();
 
-            Console.WriteLine("numero:");
+            Console.WriteLine("Numero:");
             var _numero = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Cep:");
+            Console.WriteLine("Cep:"); /*Validação de CEP não está funcionando*/
             var _cep = Console.ReadLine();
             string padraoCep = "[0 - 9]{ 2}[0 - 9]{ 3}[-]{ 0,1}[0 - 9]{ 3}";
             while (true)
@@ -73,7 +79,6 @@ namespace Escola
                     break;
                 }
             }
-            
 
             Console.WriteLine("Bairro:");
             var _bairro = Console.ReadLine();
@@ -81,8 +86,7 @@ namespace Escola
             Console.WriteLine("Digite o telefone do Professor com o DDD:");
             var _telefone = Console.ReadLine();
 
-
-            string padraoCelular = "[0 - 9]{ 2}[0 - 9]{ 5}[-]{ 0,1}[0 - 9]{ 4}";
+            string padraoCelular = "[0 - 9]{ 2}[0 - 9]{ 5}[-]{ 0,1}[0 - 9]{ 4}"; /*Validação do Telefone não está funcionando*/
             while (true)
             {
                 if (Regex.IsMatch(_telefone, padraoCelular) == false)
@@ -98,12 +102,12 @@ namespace Escola
             Console.WriteLine("Digite a Matéria de ensino:");
             var _materia = Console.ReadLine();
 
-            
+
             string telToString = _telefone.Substring(3);
-            int transformandoDDD = _telefone.ToString().Length - telToString.Length;
+            int transformandoDDD = _telefone.ToString().Length - telToString.Length; /*Código sem utilização*/
             string ddd = _telefone.Substring(0, 2);
 
-            var telefone = new Telefone { celular =telToString, ddd = ddd };
+            var telefone = new Telefone { celular = telToString, ddd = ddd };
 
             var endereco = new Endereco { idEndereco = _cdEndereco, bairro = _bairro, cep = _cep, cidade = _cidade, estadoUTF = _estado, logradouro = _logradouro, numero = _numero };
 
@@ -115,7 +119,7 @@ namespace Escola
                 Telefone = telefone,
                 materia = _materia
             };
-
+            /*Não há validação se o usuário digitar um código já existente para usuário e/ou endereço*/
             Professores.Add(professor);
         }
         public override object ObterTodos()
@@ -125,10 +129,11 @@ namespace Escola
         public override object ObterPorID()
         {
             Console.WriteLine("Digite a matrícula do Professor:");
+            /*O que acontece se eu digitar uma letra aqui? Seu codigo quebra!!!*/
             var _id = int.Parse(Console.ReadLine());
 
             var professor = Professores.FirstOrDefault(x => x.IdPessoa == _id);
-
+            /*E se não encontrar o professor?*/
             return professor;
         }
 
@@ -173,7 +178,7 @@ namespace Escola
                 Console.WriteLine("4- Bairro");
                 Console.WriteLine("5- Logradouro");
                 Console.WriteLine("6- Número da Residência");
-                Console.WriteLine("7- Código do endereço");
+                Console.WriteLine("7- Código do endereço"); /*Um código usado como identificação ou até mesmo modo de busca nunca é alterado*/
 
 
                 var escolha = Console.ReadLine();
@@ -240,14 +245,14 @@ namespace Escola
                 else
                 {
                     Console.WriteLine("OPÇÃO INVÁLIDA");
-                    
+
                 }
             }
             else
             {
-                Console.WriteLine("Código do professor não encontrado não encontrado...");
+                Console.WriteLine("Código do professor não encontrado não encontrado..."); /*Se atente ao que está escrevendo*/
             }
-          
+
         }
 
         public void AtualizarTelefone(List<Professor> professores)
@@ -263,7 +268,7 @@ namespace Escola
 
                 Console.WriteLine("Atualizar telefone ");
                 Console.WriteLine();
-
+                /*Por que atualizar apenas o DDD ou apenas o número? Não faz sentido. Quando se faz a troca de um número você deve digitá-lo todo novamente*/
                 Console.WriteLine("1- Atualizar o DDD ");
                 Console.WriteLine("2-Atualizar Telfone ");
                 var escolha = Console.ReadLine();
@@ -303,10 +308,10 @@ namespace Escola
             }
             else
             {
-                Console.WriteLine("Código do aluno não encontrado não encontrado...");
+                Console.WriteLine("Código do aluno não encontrado não encontrado..."); /*Cuidado com o copiar e colar*/
             }
         }
-        
+
         public void AtualizarMateria(List<Professor> professores)
         {
             Console.WriteLine("Digite o cógigo do Professor: ");
@@ -330,6 +335,8 @@ namespace Escola
         }
         public void Excluir(List<Turma> turmas)
         {
+            /*E se o professor estiver em uma turma?*/
+
             Console.WriteLine("Digite o código do professor para removê-lo ");
             var matricula = int.Parse(Console.ReadLine());
 
@@ -337,7 +344,8 @@ namespace Escola
             if (professorEncontrado != null)
             {
                 //var indice = Professores.IndexOf(professorEncontrado);
-                if (Professores.Contains(professorEncontrado))
+                if (Professores.Contains(professorEncontrado)) /*Essa validação não faz sentido. 
+                                                                * Você tem o professorEncontrado buscado de Professor, aí depois você vê se Professores tem o professorEncontrado*/
                 {
                     professorEncontrado.Professores.Remove(professorEncontrado);
                 }

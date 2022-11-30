@@ -13,7 +13,7 @@ namespace Escola
         public int numero { get; set; }
         public string bairro { get; set; }
         public string cidade { get; set; }
-        public string cep { get;set; }
-        public string estadoUTF { get; set; }
+        public string cep { get; set; }
+        public string estadoUTF { get; set; } /*Ainda não entendo esse UTF?*/
     }
 }

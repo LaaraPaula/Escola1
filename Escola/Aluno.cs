@@ -15,16 +15,18 @@ namespace Escola
 
 
         public Aluno()
-        { 
-            
+        {
+
         }
         public override void Cadastrar()
         {
+            /*Não há validação se for digitado um mesmo código*/
+
             Console.WriteLine("Digite o nome do aluno:");
             var _nome = Console.ReadLine();
 
             Console.WriteLine("Digite a matrícula do aluno:");
-            var _idAluno = int.Parse (Console.ReadLine());
+            var _idAluno = int.Parse(Console.ReadLine());
 
             Console.WriteLine("Digite o endereço do aluno:");
 
@@ -34,19 +36,19 @@ namespace Escola
             Console.WriteLine("Cidade:");
             var _cidade = Console.ReadLine();
 
-                    //não terminei essa condição entrada do menu 
+            //não terminei essa condição entrada do menu 
             Console.WriteLine("Digite Estado UTF:");
             var _estado = Console.ReadLine();
             while (true)
             {
-                
+
 
                 var estado = _estado.ToUpper();
                 string padraoUTF = "[A-Z]{2}";
 
                 Match resultado = Regex.Match(estado, padraoUTF);
-                
-                if (bool.Parse(resultado.Value)== false)
+
+                if (bool.Parse(resultado.Value) == false)
                 {
                     Console.WriteLine("Estado, UTF inválido!");
                     Console.WriteLine("Ex: SP ");
@@ -61,7 +63,7 @@ namespace Escola
             Console.WriteLine("Logradouro:");
             var _logradouro = Console.ReadLine();
 
-            Console.WriteLine("numero:");
+            Console.WriteLine("Numero:");
             var _numero = int.Parse(Console.ReadLine());
 
             Console.WriteLine("Cep:");
@@ -101,18 +103,19 @@ namespace Escola
             }
 
             Console.WriteLine("Digite o período de estudo do aluno:");
-            var _periodo = Console.ReadLine();
+            var _periodo = Console.ReadLine(); /*Para onde está indo o perído?*/
 
             Console.WriteLine("Digite o código da turma do aluno:");
             var _turma = int.Parse(Console.ReadLine());
+            /*E se o código da turma for inválido?*/
 
             string telToString = _telefone.Substring(3);
-            
+
             string ddd = _telefone.Substring(0, 2);
 
-            var telefone = new Telefone {ddd = ddd, celular = telToString};
+            var telefone = new Telefone { ddd = ddd, celular = telToString };
 
-            var endereco = new Endereco {idEndereco = _cdEndereco, bairro= _bairro, cep=_cep , cidade= _cidade , estadoUTF= _estado , logradouro=_logradouro , numero= _numero};
+            var endereco = new Endereco { idEndereco = _cdEndereco, bairro = _bairro, cep = _cep, cidade = _cidade, estadoUTF = _estado, logradouro = _logradouro, numero = _numero };
 
             var aluno = new Aluno
             {
@@ -124,12 +127,12 @@ namespace Escola
             };
 
             Alunos.Add(aluno);
-            
+
 
         }
         public override object ObterTodos()
         {
-           return Alunos;
+            return Alunos;
         }
         public override object ObterPorID()
         {
@@ -186,7 +189,7 @@ namespace Escola
 
                 var escolha = Console.ReadLine();
 
-                if (escolha =="1")
+                if (escolha == "1")
                 {
                     Console.WriteLine("Digite o Cep: ");
                     var _enderecoAtual = Console.ReadLine();
@@ -208,7 +211,7 @@ namespace Escola
                     {
                         alunos[indice].Endereco.estadoUTF = _enderecoAtual;
                     }
-                    
+
                 }
                 else if (escolha == "3")
                 {
@@ -248,7 +251,7 @@ namespace Escola
             }
         }
 
-        public void  AtualizarTelefone(List<Aluno> alunos)
+        public void AtualizarTelefone(List<Aluno> alunos)
         {
             Console.WriteLine("Digite o cógigo do Aluno: ");
             var cdAluno = int.Parse(Console.ReadLine());
@@ -266,7 +269,7 @@ namespace Escola
                 Console.WriteLine("2-Atualizar Telfone ");
                 var escolha = Console.ReadLine();
 
-                if(escolha=="1")
+                if (escolha == "1")
                 {
                     Console.WriteLine("Digite o DDD ");
                     var _telefoneAtual = Console.ReadLine();
@@ -278,7 +281,7 @@ namespace Escola
                     }
                     alunos[indice].Telefone.ddd = _telefoneAtual;
                 }
-                else if (escolha=="2")
+                else if (escolha == "2")
                 {
                     Console.WriteLine("Digite o celular ");
                     var _telefoneAtual = Console.ReadLine();
@@ -296,7 +299,7 @@ namespace Escola
                 {
                     Console.WriteLine("OPÇÃO INVÁLIDA");
                 }
-                
+
             }
             else
             {
@@ -362,14 +365,16 @@ namespace Escola
             var alunoEncontrado = Alunos.FirstOrDefault(x => x.IdPessoa == matricula);
             if (alunoEncontrado != null)
             {
+                /*Analisar esse ponto aqui. Por que buscar a lista de Alunos de alunoEncontrado se você tem acesso a ele direto.
+                 E por que limpar o id da turma do aluno encontrado depois de você removê-lo?*/
                 alunoEncontrado.Alunos.Remove(alunoEncontrado);
-                alunoEncontrado.IdDaTurma=0;
+                alunoEncontrado.IdDaTurma = 0;
             }
             else
             {
                 Console.WriteLine("Código do aluno não encontrado...");
             }
-            
+
         }
     }
 
