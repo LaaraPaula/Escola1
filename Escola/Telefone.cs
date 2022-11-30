@@ -25,9 +25,11 @@ namespace Escola
             }
             return tel;
         }
-        
-       
 
+        internal string Substring(int v, int v1)
+        {
+            throw new NotImplementedException();
+        }
     }
     
 }

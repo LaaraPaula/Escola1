@@ -15,5 +15,10 @@ namespace Escola
         public string cidade { get; set; }
         public string cep { get;set; }
         public string estadoUTF { get; set; }
+
+        public static implicit operator string(Endereco v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

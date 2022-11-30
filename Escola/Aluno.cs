@@ -12,7 +12,9 @@ namespace Escola
         public List<Aluno> Alunos = new List<Aluno>();
         public string Periodo { get; set; }
         public int IdDaTurma { get; set; }
-
+        public Endereco _estado { get; set; }
+        public Endereco _cep { get; set; }
+        public Telefone _telefone { get; set;}
 
         public Aluno()
         { 
@@ -35,26 +37,26 @@ namespace Escola
             var _cidade = Console.ReadLine();
 
                     //não terminei essa condição entrada do menu 
-            Console.WriteLine("Digite Estado UTF:");
-            var _estado = Console.ReadLine();
+            
             while (true)
             {
-                
-
+                Console.WriteLine("Digite Estado UTF:");
+                var _estado = Console.ReadLine();
                 var estado = _estado.ToUpper();
-                string padraoUTF = "[A-Z]{2}";
+                string padraoUTF = "[A-T]{2}";
 
                 Match resultado = Regex.Match(estado, padraoUTF);
                 
-                if (bool.Parse(resultado.Value)== false)
+                if (String.IsNullOrEmpty(resultado.ToString()))
                 {
                     Console.WriteLine("Estado, UTF inválido!");
                     Console.WriteLine("Ex: SP ");
                     Console.WriteLine();
+                    Console.WriteLine("Digite Estado UTF:");
+                    var _estado2 = Console.ReadLine();
                 }
                 else
                 {
-                    _estado = estado;
                     break;
                 }
             }
@@ -64,15 +66,20 @@ namespace Escola
             Console.WriteLine("numero:");
             var _numero = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Cep:");
-            var _cep = Console.ReadLine();
-            string padraoCep = "[0 - 9]{ 2}[0 - 9]{ 3}[-]{ 0,1}[0 - 9]{ 3}";
+            
             while (true)
             {
-                if (Regex.IsMatch(_cep, padraoCep) == false)
+                Console.WriteLine("Cep:");
+                var _cep = Console.ReadLine();
+                string padraoCep = "[0 - 9]{ 2}[0 - 9]{ 3}[-]{0,1}[0 - 9]{ 3}";
+
+                Match resultado = Regex.Match(_cep, padraoCep);
+
+                if (String.IsNullOrEmpty(resultado.ToString()))
                 {
                     Console.WriteLine("NÚMERO DE CEP INVÁLIDO!");
                     Console.WriteLine("Ex: XXXXX-XXX");
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -83,13 +90,16 @@ namespace Escola
             Console.WriteLine("Bairro:");
             var _bairro = Console.ReadLine();
 
-            Console.WriteLine("Digite o telefone do aluno com o DDD:");
-            var _telefone = Console.ReadLine();
-
-            string padraoCelular = "[0 - 9]{ 2}[0 - 9]{ 5}[-]{ 0,1}[0 - 9]{ 4}";
+            
             while (true)
             {
-                if (Regex.IsMatch(_telefone, padraoCelular) == false)
+                Console.WriteLine("Digite o telefone do aluno com o DDD:");
+                var _telefone = Console.ReadLine();
+
+                string padraoCelular = "[0 - 9]{ 2}[0 - 9]{ 5}[-]{ 0,1}[0 - 9]{ 4}";
+                Match resultado = Regex.Match(_telefone, padraoCelular);
+
+                if (String.IsNullOrEmpty(resultado.ToString()))
                 {
                     Console.WriteLine("NÚMERO DE TELEFONE INVÁLIDO!");
                     Console.WriteLine("Ex: xxxxxx-xxxx");
@@ -106,7 +116,7 @@ namespace Escola
             Console.WriteLine("Digite o código da turma do aluno:");
             var _turma = int.Parse(Console.ReadLine());
 
-            string telToString = _telefone.Substring(3);
+            string telToString = _telefone.Substring(3,10);
             
             string ddd = _telefone.Substring(0, 2);
 
