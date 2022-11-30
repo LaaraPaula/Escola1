@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 namespace Escola
 {
     public class Telefone
-    { 
+    {
         public string ddd { get; set; }
         public string celular { get; set; }
 
 
-        public string ValidadeTelefone ()
+        /*Por que esse método se ele não é usado em nenhum lugar?*/
+        public string ValidadeTelefone()
         {
             string tel = $"{ddd} {celular}";
 
@@ -31,5 +32,4 @@ namespace Escola
             throw new NotImplementedException();
         }
     }
-    
 }

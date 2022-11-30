@@ -47,7 +47,7 @@ namespace Escola
 
             return Pesquisarturmas;
         }
-        public void ExcluirTurma(List<Aluno> alunos)
+        public void ExcluirTurma(List<Aluno> alunos) /*Onde está sendo usado esse ExcluirTurma?*/
         {
             Console.WriteLine("Digite o código da turmaque deseja excluir: ");
             var _cdTurma = int.Parse(Console.ReadLine());
@@ -65,13 +65,12 @@ namespace Escola
                     Console.WriteLine("Ainda existem alunos matriculados nesta turma");
                 }
             }
-            else
+            else /*Resposta certa se eu não encontrar uma turma?*/
             {
                 Console.WriteLine("Ainda existem alunos registrados na turma");
             }
 
         }
-
 
 
         public void AdicionarAluno(List<Aluno> alunos)
@@ -133,7 +132,7 @@ namespace Escola
             var _idTurma = 1;
             return alunos.Where(x => x.IdDaTurma == _idTurma);
         }
-        public int ObterQuantidadeAlunos(List<Aluno> alunos)
+        public int ObterQuantidadeAlunos(List<Aluno> alunos) /*Onde está sendo usado?*/
         {
             var idTurma = 1;
 

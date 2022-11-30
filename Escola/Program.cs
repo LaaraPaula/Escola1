@@ -8,6 +8,16 @@ namespace Escola
 {
     internal class Program
     {
+
+        /*
+         * Melhorar condição do menu - Utilizar switch - case
+         * Segue link de apoio: https://www.w3schools.com/cs/cs_switch.php
+         * 
+         * Formatar exibição do terminal melhor. Informaçõs ficam confusas, terminal fica poluído.
+         * Necessário usar o Try Catch
+         * Verifique erros de português, de escrita...
+         */
+
         static void Main(string[] args)
         {
             var turma = new Turma();
@@ -32,11 +42,11 @@ namespace Escola
                     }
                     else if (entrada2 == "2")
                     {
-                        professor.ObterTodos();
+                        professor.ObterTodos(); /*Não exibe no terminal*/
                     }
                     else if (entrada2 == "3")
                     {
-                        professor.ObterPorID();
+                        professor.ObterPorID(); /*Não exibe no terminal*/
                     }
                     else if (entrada2 == "4")
                     {
@@ -91,11 +101,11 @@ namespace Escola
                     }
                     else if (entrada2 == "2")
                     {
-                        aluno.ObterTodos();
+                        aluno.ObterTodos(); /*Não exibe no Terminal*/
                     }
                     else if (entrada2 == "3")
                     {
-                        aluno.ObterPorID();
+                        aluno.ObterPorID(); /*Não exibe no Terminal*/
                     }
                     else if (entrada2 == "4")
                     {
@@ -168,11 +178,11 @@ namespace Escola
                     }
                     else if (entrada2 == "2")
                     {
-                        turma.ObterTodos();
+                        turma.ObterTodos(); /*Não exibe no Terminal*/
                     }
                     else if (entrada2 == "3")
                     {
-                        turma.ObterPorID();
+                        turma.ObterPorID(); /*Não exibe no Terminal*/
                     }
                     else if (entrada2 == "4")
                     {
@@ -184,7 +194,7 @@ namespace Escola
                     }
                     else if (entrada2 == "6")
                     {
-                        turma.ObterAlunos(aluno.Alunos);
+                        turma.ObterAlunos(aluno.Alunos); /*Não exibe no Terminal*/
                     }
                     else if (entrada2 == "7")
                     {

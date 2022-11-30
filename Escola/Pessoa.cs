@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Escola
 {
-    public abstract class Pessoa 
+    public abstract class Pessoa
     {
         public int IdPessoa { get; set; }
         public string Nome { get; set; }
@@ -30,10 +30,5 @@ namespace Escola
         public abstract void Cadastrar();
         public abstract object ObterTodos();
         public abstract object ObterPorID();
-
-        
-
-
-
     }
 }
