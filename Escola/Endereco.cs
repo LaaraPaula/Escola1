@@ -14,7 +14,7 @@ namespace Escola
         public string bairro { get; set; }
         public string cidade { get; set; }
         public string cep { get;set; }
-        public string estadoUTF { get; set; }
+        public string estadoUF { get; set; }
 
         public static implicit operator string(Endereco v)
         {

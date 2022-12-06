@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Escola
@@ -15,198 +16,491 @@ namespace Escola
         public int IdTurma { get; set; }
         public string AnoEscolar { get; set; }
         public List<Professor> Professores { get; set; } = new List<Professor>();
-
+        public string msg = "Código de turma não encontrado...";
 
 
         public void Cadastrar(List<Professor> professores, List<Aluno> alunos)
 
         {
-            Console.WriteLine("Digite o Código da turma: ");
-            var _idTurma = int.Parse(Console.ReadLine());
+            var _idTurma = 0;
+            
+            while (true)
+            {
+                Console.WriteLine("Digite o Código da turma: ");
+                var _idTurmaStr = Console.ReadLine();
+                if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
+                {
+                    Console.WriteLine("Código aceita apenas números");
+                }
+                else
+                {
+                    _idTurma = int.Parse(_idTurmaStr);
+                    var existeTurma = Turmas.Any(x => x.IdTurma == _idTurma);
+                    if (!existeTurma)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Código da Turma já EXISTE!!");
+                        Console.WriteLine();
+                    }
+                }
+            }
+            Console.WriteLine();
+            var _anoEscolar = "";
 
-            Console.WriteLine("Digite o Ano Escolar desta turma: ");
-            var _anoEscolar = Console.ReadLine();
-
+            while (true)
+            {
+                Console.WriteLine("Digite o Ano escolar ");
+                _anoEscolar = Console.ReadLine();
+                if (!Regex.IsMatch(_anoEscolar, @"^[1-9][a-zA-Z\x20]+$"))
+                {
+                    Console.WriteLine("CADASTRO DE TURMA INCORRETO!");
+                    Console.WriteLine("Ex: 1 Ano ou Ex2: 1Ano");
+                }
+                else
+                {
+                    break;
+                }
+            }
             var novaTurma = new Turma
             {
                 IdTurma = _idTurma,
-                AnoEscolar = _anoEscolar
+                AnoEscolar = _anoEscolar.ToUpper()
             };
             Turmas.Add(novaTurma);
+            Console.WriteLine("Turma Cadastrada com sucesso!!");
+            Console.WriteLine("==================================================");
         }
-        public object ObterTodos()
+        public void ObterTodos()
         {
-            return Turmas;
-        }
-        public object ObterPorID()
-        {
-            Console.WriteLine("Digite o código da Turma :");
-            var _id = int.Parse(Console.ReadLine());
-
-            var Pesquisarturmas = Turmas.FirstOrDefault(x => x.IdTurma == _id);
-
-            return Pesquisarturmas;
-        }
-        public void ExcluirTurma(List<Aluno> alunos) /*Onde está sendo usado esse ExcluirTurma?*/
-        {
-            Console.WriteLine("Digite o código da turmaque deseja excluir: ");
-            var _cdTurma = int.Parse(Console.ReadLine());
-            var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _cdTurma);
-            if (turmaEncontrada != null)
+            var listaOrdenada =Turmas.OrderBy(c => c.AnoEscolar).ToList();
+            foreach (var item in listaOrdenada)
             {
-                var quantidadeAlunos = alunos.Where(x => x.IdDaTurma == turmaEncontrada.IdTurma).Count();
-
-                if (quantidadeAlunos == 0)
+                Console.WriteLine($"ID:{item.IdTurma}\tAno Escolar:{item.AnoEscolar}");
+            }
+            if (listaOrdenada.Count == 0)
+            {
+                Console.WriteLine("Não existe nenhuma truma cadastrada!");
+            }
+            Console.WriteLine();
+        }
+        public void ObterPorID()
+        {
+            var _id = 0;
+            while (true)
+            {
+                Console.WriteLine("Digite o código da Turma:");
+                Console.WriteLine();
+                var _idTurmaStr =Console.ReadLine();
+                if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
                 {
-                    Turmas.Remove(turmaEncontrada);
+                    Console.WriteLine("Código aceita apenas números");
                 }
                 else
                 {
-                    Console.WriteLine("Ainda existem alunos matriculados nesta turma");
+                    _id = int.Parse(_idTurmaStr);
+
+                    var turma = Turmas.FirstOrDefault(x => x.IdTurma == _id);
+                    if (turma != null)
+                    {
+                        Console.WriteLine($"ID: {turma.IdTurma}\tAno Escolar: {turma.AnoEscolar}");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine(msg);
+                        break;
+                    }
                 }
             }
-            else /*Resposta certa se eu não encontrar uma turma?*/
-            {
-                Console.WriteLine("Ainda existem alunos registrados na turma");
-            }
-
+            Console.WriteLine();
         }
+        public void ExcluirTurma(List<Aluno> alunos)
+        {
+            var _id = 0;
+            while (true)
+            {
+                Console.WriteLine("Digite o código da Turma:");
+                Console.WriteLine();
+                var _idTurmaStr = Console.ReadLine();
 
+                if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
+                {
+                    Console.WriteLine("Código aceita apenas números");
+                }
+                else
+                {
+                    _id = int.Parse(_idTurmaStr);
 
+                    var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _id);
+                    if (turmaEncontrada != null)
+                    {
+                        var quantidadeAlunos = alunos.Where(x => x.IdDaTurma == turmaEncontrada.IdTurma).Count();
+
+                        if (quantidadeAlunos == 0)
+                        {
+                            Turmas.Remove(turmaEncontrada);
+                            Console.WriteLine($"Turma {turmaEncontrada.AnoEscolar} removida com sucesso!");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Ainda existem alunos matriculados nesta turma, vc precisa removê-los antes");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine(msg);
+                        break;
+                    }
+                }
+                
+            }
+            Console.WriteLine();
+        }
         public void AdicionarAluno(List<Aluno> alunos)
         {
-            Console.WriteLine("Digite a matrícula do aluno para adicioná-lo a turma: ");
-            var matricula = int.Parse(Console.ReadLine());
-
-            var alunoEncontrado = alunos.FirstOrDefault(x => x.IdPessoa == matricula);
-
-            if (alunoEncontrado != null)
+            var _idAluno = 0;
+            while (true)
             {
-                Console.WriteLine("Digite o código da turma a qual predente adicioná-lo: ");
-                var _cdTurma = int.Parse(Console.ReadLine());
+                Console.WriteLine("Digite o código do Aluno:");
+                Console.WriteLine();
+                var _idAlunoStr = Console.ReadLine();
 
-                var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _cdTurma);
-                if (turmaEncontrada != null)
+                if (!Regex.IsMatch(_idAlunoStr, @"^[0-9]+$"))
                 {
-                    alunoEncontrado.IdDaTurma = turmaEncontrada.IdTurma;
-
+                    Console.WriteLine("Código aceita apenas números");
                 }
                 else
                 {
-                    Console.WriteLine("Código da turma não encontrado...");
+                    _idAluno = int.Parse(_idAlunoStr);
+
+                    var alunoEncontrado = alunos.FirstOrDefault(x => x.IdPessoa == _idAluno);
+
+                    if (alunoEncontrado != null)
+                    {
+                        var _id = 0;
+                        while (true)
+                        {
+                            Console.WriteLine("Digite o código da Turma:");
+                            Console.WriteLine();
+                            var _idTurmaStr = Console.ReadLine();
+
+                            if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
+                            {
+                                Console.WriteLine("Código aceita apenas números");
+                            }
+                            else
+                            {
+                                _id = int.Parse(_idTurmaStr);
+
+                                var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _id);
+                                if (turmaEncontrada != null)
+                                {
+                                    alunoEncontrado.IdDaTurma = turmaEncontrada.IdTurma;
+                                    Console.WriteLine($"Aluno(a) {alunoEncontrado.Nome} adicionado a turma com sucesso!");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Código da turma não encontrado...");
+                                    break;
+                                }
+                            }
+                        }
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine("Código do aluno não encontrado...");
+                        break;
+                    }
                 }
             }
-            else
-            {
-                Console.WriteLine("Código do aluno não encontrado...");
-            }
-
+            Console.WriteLine();
         }
         public void RemoverAluno(List<Aluno> alunos)
         {
-            Console.WriteLine("Digite o código da turma: ");
-            var _cdTurma = int.Parse(Console.ReadLine());
-
-            var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _cdTurma);
-            if (turmaEncontrada != null)
+            var _id = 0;
+            while (true)
             {
-                Console.WriteLine("Digite a matrícula do aluno removê-lo da turma: ");
-                var matricula = int.Parse(Console.ReadLine());
-                var alunoEncontrado = alunos.FirstOrDefault(x => x.IdPessoa == matricula);
-                if (alunoEncontrado != null)
+                Console.WriteLine("Digite o código da Turma:");
+                Console.WriteLine();
+                var _idTurmaStr = Console.ReadLine();
+
+                if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
                 {
-                    alunoEncontrado.IdDaTurma = 0;
+                    Console.WriteLine("Código aceita apenas números");
                 }
                 else
                 {
-                    Console.WriteLine("Código do aluno não encontrado...");
+                    _id = int.Parse(_idTurmaStr);
+                    var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _id);
+                    if (turmaEncontrada != null)
+                    {
+                        var _idAluno = 0;
+                        while (true)
+                        {
+                            Console.WriteLine("Digite o código do Aluno:");
+                            Console.WriteLine();
+                            var _idAlunoStr = Console.ReadLine();
+
+                            if (!Regex.IsMatch(_idAlunoStr, @"^[0-9]+$"))
+                            {
+                                Console.WriteLine("Código aceita apenas números");
+                            }
+                            else
+                            {
+                                _idAluno = int.Parse(_idAlunoStr);
+                                var alunoEncontrado = alunos.FirstOrDefault(x => x.IdPessoa == _idAluno);
+                                if (alunoEncontrado != null)
+                                {
+                                    alunoEncontrado.IdDaTurma = 0;
+                                    Console.WriteLine($"Aluno(a) {alunoEncontrado.Nome} removido(a) da turma com sucesso!");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Código do aluno não encontrado...");
+                                    break;
+                                }
+                            }
+                        }
+                       
+                    }
+                    else
+                    {
+                        Console.WriteLine("Código da turma não encontrado...");
+                        break;
+                    }
                 }
             }
-            else
+            Console.WriteLine();
+        }
+        public void ObterAlunos(List<Aluno> alunos)
+        {
+            var _id = 0;
+            while (true)
             {
-                Console.WriteLine("Código da turma não encontrado...");
-            }
-        }
-        public object ObterAlunos(List<Aluno> alunos)
-        {
-            var _idTurma = 1;
-            return alunos.Where(x => x.IdDaTurma == _idTurma);
-        }
-        public int ObterQuantidadeAlunos(List<Aluno> alunos) /*Onde está sendo usado?*/
-        {
-            var idTurma = 1;
+                Console.WriteLine("Digite o código da Turma:");
+                Console.WriteLine();
+                var _idTurmaStr = Console.ReadLine();
 
-            var quantidade = alunos.Where(x => x.IdDaTurma == idTurma).Count();
-            return quantidade;
-        }
-
-
-        public void AdicionarProfessor(List<Professor> professores)
-        {
-            Console.WriteLine("Digite o id do professor para adicioná-lo");
-            var prof = int.Parse(Console.ReadLine());
-
-
-            var profEncontrado = professores.FirstOrDefault(x => x.IdPessoa == prof);
-
-            if (profEncontrado != null)
-            {
-                Console.WriteLine("Digite o código da turma a qual predente adicioná-lo: ");
-                var _cdTurma = int.Parse(Console.ReadLine());
-
-                var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _cdTurma);
-                if (turmaEncontrada != null)
+                if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
                 {
-                    turmaEncontrada.Professores.Add(profEncontrado);
+                    Console.WriteLine("Código aceita apenas números");
                 }
                 else
                 {
-                    Console.WriteLine("Código da turma não encontrado...");
+                    _id = int.Parse(_idTurmaStr);
+
+                    var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _id);
+                    if (turmaEncontrada != null)
+                    {
+                        var listaOrdenada = alunos.OrderBy(c => c.Nome).ToList();
+                        var alunosTurma = listaOrdenada.Where(x => x.IdDaTurma == _id);
+                        foreach (var item in alunosTurma)
+                        {
+                            Console.WriteLine($"Nome: {item.Nome} ID: {item.IdPessoa}");
+
+                            Console.WriteLine();
+
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine(msg);
+                        break;
+                    }
+                }
+
+            }
+            Console.WriteLine();
+        }
+        public void ObterQuantidadeAlunos(List<Aluno> alunos)
+        {
+            var _id = 0;
+            while (true)
+            {
+                Console.WriteLine("Digite o código da Turma para ver a quantidade de alunos nela:");
+                Console.WriteLine();
+                var _idTurmaStr = Console.ReadLine();
+
+                if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
+                {
+                    Console.WriteLine("Código aceita apenas números");
+                }
+                else
+                {
+                    _id = int.Parse(_idTurmaStr);
+
+                    var quantidade = alunos.Where(x => x.IdDaTurma == _id).Count();
+                    Console.WriteLine($"A turma tem {quantidade} alunos.");
+                    break;
                 }
             }
-            else
+            Console.WriteLine();
+        }
+        public void AdicionarProfessor(List<Professor> professores) 
+        {
+            var _idProf = 0;
+            while (true)
             {
-                Console.WriteLine("Código de professor não encontrado");
+                Console.WriteLine("Digite o código do Professor:");
+                Console.WriteLine();
+                var _idProfStr = Console.ReadLine();
+
+                if (!Regex.IsMatch(_idProfStr, @"^[0-9]+$"))
+                {
+                    Console.WriteLine("Código aceita apenas números");
+                }
+                else
+                {
+                    _idProf = int.Parse(_idProfStr);
+
+                    var profEncontrado = professores.FirstOrDefault(x => x.IdPessoa == _idProf);
+
+                    if (profEncontrado != null)
+                    {
+                        var _id = 0;
+                        while (true)
+                        {
+                            Console.WriteLine("Digite o código da Turma:");
+                            Console.WriteLine();
+                            var _idTurmaStr = Console.ReadLine();
+
+                            if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
+                            {
+                                Console.WriteLine("Código aceita apenas números");
+                            }
+                            else
+                            {
+                                _id = int.Parse(_idTurmaStr);
+
+                                var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _id);
+                                if (turmaEncontrada != null)
+                                {
+                                    turmaEncontrada.Professores.Add(profEncontrado);
+                                    Console.WriteLine($"Professor(a) {profEncontrado.Nome} de {profEncontrado.materia} adicionado a turma com sucesso!");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Código da turma não encontrado...");
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Código de professor não encontrado");
+                        break;
+                    }
+                }
             }
+            Console.WriteLine();
         }
         public void RemoverProfessor(List<Professor> professores)
         {
-            Console.WriteLine("Digite o código da turma: ");
-            var _cdTurma = int.Parse(Console.ReadLine());
-
-            var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _cdTurma);
-            if (turmaEncontrada != null)
+            var _id = 0;
+            while (true)
             {
-                Console.WriteLine("Digite o código do professor removê-lo da turma: ");
-                var matricula = int.Parse(Console.ReadLine());
+                Console.WriteLine("Digite o código da Turma:");
+                Console.WriteLine();
+                var _idTurmaStr = Console.ReadLine();
 
-                var professorEncontrado = professores.FirstOrDefault(x => x.IdPessoa == matricula);
-                if (professorEncontrado != null)
+                if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
                 {
-                    turmaEncontrada.Professores.Remove(professorEncontrado);
+                    Console.WriteLine("Código aceita apenas números");
                 }
                 else
                 {
-                    Console.WriteLine("Código do professor não encontrado...");
+                    _id = int.Parse(_idTurmaStr);
+
+                    var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _id);
+                    if (turmaEncontrada != null)
+                    {
+                        var _idProf = 0;
+                        while (true)
+                        {
+                            Console.WriteLine("Digite o código da Turma:");
+                            Console.WriteLine();
+                            var _idProfStr = Console.ReadLine();
+
+                            if (!Regex.IsMatch(_idProfStr, @"^[0-9]+$"))
+                            {
+                                Console.WriteLine("Código aceita apenas números");
+                            }
+                            else
+                            {
+                                _idProf = int.Parse(_idTurmaStr);
+
+                                var professorEncontrado = professores.FirstOrDefault(x => x.IdPessoa == _idProf);
+                                if (professorEncontrado != null)
+                                {
+                                    turmaEncontrada.Professores.Remove(professorEncontrado);
+                                    Console.WriteLine($"Professor {professorEncontrado.Nome} de {professorEncontrado.materia} removido com sucesso!");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Código do professor não encontrado...");
+                                    break;
+                                }
+                            }
+                        }
+                       
+                    }
+                    else
+                    {
+                        Console.WriteLine("Código da turma não encontrado...");
+                        break;
+                    }
                 }
             }
-            else
-            {
-                Console.WriteLine("Código da turma não encontrado...");
-            }
+            Console.WriteLine();
         }
-        public object ObterProfessores()
+        public void ObterProfessores()
         {
-            Console.WriteLine("Digite o código da turma para exibir os professores: ");
-            var _cdTurma = int.Parse(Console.ReadLine());
-
-            var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _cdTurma);
-            if (turmaEncontrada != null)
+            var _id = 0;
+            while (true)
             {
-                return turmaEncontrada.Professores;
+                Console.WriteLine("Digite o código da Turma:");
+                Console.WriteLine();
+                var _idTurmaStr = Console.ReadLine();
+
+                if (!Regex.IsMatch(_idTurmaStr, @"^[0-9]+$"))
+                {
+                    Console.WriteLine("Código aceita apenas números");
+                }
+                else
+                {
+                    _id = int.Parse(_idTurmaStr);
+
+                    var turmaEncontrada = Turmas.FirstOrDefault(x => x.IdTurma == _id);
+                    if (turmaEncontrada != null)
+                    {
+                        var listaOrdenada = turmaEncontrada.Professores.OrderBy(c => c.Nome).ToList();
+                        foreach (var item in listaOrdenada)
+                        {
+                            Console.WriteLine($"Nome: {item.Nome} ID: {item.IdPessoa} Matéria:{item.materia}");
+
+                            Console.WriteLine();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine(msg);
+                        break;
+                    }
+                }
             }
-            string msg = "Código de turma não encontrado";
-            return msg;
         }
     }
 }

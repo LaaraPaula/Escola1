@@ -9,7 +9,7 @@ namespace Escola
 {
     public abstract class Pessoa
     {
-        public int IdPessoa { get; set; }
+        public int IdPessoa { get; protected set; }
         public string Nome { get; set; }
         public Telefone Telefone { get; set; }
         public Endereco Endereco { get; set; }
@@ -28,7 +28,9 @@ namespace Escola
 
         }
         public abstract void Cadastrar();
-        public abstract object ObterTodos();
-        public abstract object ObterPorID();
+        public abstract void Cadastrar(List<Turma>turmas);
+        public abstract void ObterTodos();
+        public abstract void ObterPorID();
+        public abstract void Excluir(List<Turma> turmas);
     }
 }

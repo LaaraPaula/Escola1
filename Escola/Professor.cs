@@ -12,6 +12,8 @@ namespace Escola
         public List<Professor> Professores = new List<Professor>();
         public string materia { get; set; }
 
+        public string msg = "Código do professor não encontrado...";
+
         public Professor()
         {
 
@@ -19,37 +21,99 @@ namespace Escola
 
         public override void Cadastrar()
         {
-            Console.WriteLine("Digite o nome do Professor:");
-            var _nome = Console.ReadLine();
-
-            Console.WriteLine("Digite a matrícula do Professor:");
-            var _idProf = int.Parse(Console.ReadLine());
-
-            /*Fica confuso aqui pedir o endereço do professor e logo apos o código. 
-             * Dá a impressão que a primeira mensagem já se refere a digitar o endereço, Segue sugestão abaixo do que colocar no lugar de "Digite o endereço do Professor" */
-
-            /*Console.WriteLine("\n------Endereço------\n")
-             O \n é utilizado pra quebra de linha.
-             */
-
-            Console.WriteLine("Digite o endereço do Professor:");
-            Console.WriteLine("Código do endereço:");
-            var _cdEndereco = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Cidade:");
-            var _cidade = Console.ReadLine();
-
-            Console.WriteLine("Estado UTF:"); /*UTF????*/
-            var _estado = Console.ReadLine();
-
-            var estado = _estado.ToUpper();
-            string padraoUTF = "[A-Z]{2}";
+            var _nome = "";
             while (true)
             {
-                if (Regex.IsMatch(estado, padraoUTF) == false)
+                Console.WriteLine("Digite o nome do Professor:");
+                _nome = Console.ReadLine();
+                if (!Regex.IsMatch(_nome, @"^[a-zA-Z\x20]+$"))
+                {
+                    Console.WriteLine("Digite apenas letras para o nome do Professor");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            Console.WriteLine();
+            var _idProf = 0;
+
+            while (true)
+            {
+                Console.WriteLine("Digite o código do professor:");
+                var idProfStr = Console.ReadLine();
+
+                if (!Regex.IsMatch(idProfStr, @"^[0-9]+$"))
+                {
+                    Console.WriteLine("Código aceita apenas números");
+                }
+                else
+                {
+                    _idProf = int.Parse(idProfStr);
+                    var existeProfessor = Professores.Any(x => x.IdPessoa == _idProf);
+                    if (!existeProfessor)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Código do Professor já EXISTE!!");
+                        Console.WriteLine();
+                    }
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("\n------Endereço------\n");
+
+            var _cdEndereco = 0;
+            while (true)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Código do endereço:");
+                var _cdEnderecoStg = Console.ReadLine();
+
+                if (!Regex.IsMatch(_cdEnderecoStg, @"^[0-9]+$"))
+                {
+                    Console.WriteLine("Código aceita apenas números");
+                }
+                else
+                {
+                    _cdEndereco = int.Parse(_cdEnderecoStg);
+                    break;
+                }
+            }
+            Console.WriteLine();
+            var _cidade = "";
+            while (true)
+            {
+                Console.WriteLine("Cidade:");
+                _cidade = Console.ReadLine();
+                if (!Regex.IsMatch(_cidade, @"^[a-zA-Z\x20]+$"))
+                {
+                    Console.WriteLine("Digite apenas letras para o nome da cidade");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            Console.WriteLine();
+            string _estado = "";
+            while (true)
+            {
+                Console.WriteLine("Digite Estado UF:");
+                _estado = Console.ReadLine();
+                var estado = _estado.ToUpper();
+                const string padraoUF = "^[A-T]{2}$";
+
+                Match resultado = Regex.Match(estado, padraoUF);
+
+
+                if (String.IsNullOrEmpty(resultado.ToString()))
                 {
                     Console.WriteLine("Estado, UTF inválido!");
                     Console.WriteLine("Ex: SP ");
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -57,22 +121,42 @@ namespace Escola
                 }
             }
 
-
+            Console.WriteLine();
             Console.WriteLine("Logradouro:");
             var _logradouro = Console.ReadLine();
 
-            Console.WriteLine("Numero:");
-            var _numero = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Cep:"); /*Validação de CEP não está funcionando*/
-            var _cep = Console.ReadLine();
-            string padraoCep = "[0 - 9]{ 2}[0 - 9]{ 3}[-]{ 0,1}[0 - 9]{ 3}";
+            Console.WriteLine();
+            var _numero = 0;
             while (true)
             {
-                if (Regex.IsMatch(_cep, padraoCep) == false)
+                Console.WriteLine("Numero:");
+                var _numeroStg = Console.ReadLine();
+                if (Regex.IsMatch(_numeroStg,@"^[0-9]+$"))
+                {
+                    _numero = int.Parse(_numeroStg);
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("O número da residencia não pode letras nem decimais, somente número inteiro. ");
+                }
+            }
+            Console.WriteLine();
+
+            string _cep = "";
+            while (true)
+            {
+                Console.WriteLine("Cep:");
+                _cep = Console.ReadLine();
+                string padraoCep = @"^\d{5}[-]?\d{3}$";
+
+                Match resultado = Regex.Match(_cep, padraoCep);
+
+                if (String.IsNullOrEmpty(resultado.ToString()))
                 {
                     Console.WriteLine("NÚMERO DE CEP INVÁLIDO!");
                     Console.WriteLine("Ex: XXXXX-XXX");
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -80,16 +164,21 @@ namespace Escola
                 }
             }
 
+            Console.WriteLine();
             Console.WriteLine("Bairro:");
             var _bairro = Console.ReadLine();
 
-            Console.WriteLine("Digite o telefone do Professor com o DDD:");
-            var _telefone = Console.ReadLine();
-
-            string padraoCelular = "[0 - 9]{ 2}[0 - 9]{ 5}[-]{ 0,1}[0 - 9]{ 4}"; /*Validação do Telefone não está funcionando*/
+            Console.WriteLine();
+            string _telefone = "";
             while (true)
             {
-                if (Regex.IsMatch(_telefone, padraoCelular) == false)
+                Console.WriteLine("Digite o telefone do professor com o DDD:");
+                _telefone = Console.ReadLine();
+
+                string padraoCelular = @"^\d{6,7}[-]?\d{4}$";
+                Match resultado = Regex.Match(_telefone, padraoCelular);
+
+                if (String.IsNullOrEmpty(resultado.ToString()))
                 {
                     Console.WriteLine("NÚMERO DE TELEFONE INVÁLIDO!");
                     Console.WriteLine("Ex: xxxxxx-xxxx");
@@ -99,265 +188,433 @@ namespace Escola
                     break;
                 }
             }
+
+            Console.WriteLine();
             Console.WriteLine("Digite a Matéria de ensino:");
             var _materia = Console.ReadLine();
-
+            Console.WriteLine();
 
             string telToString = _telefone.Substring(3);
-            int transformandoDDD = _telefone.ToString().Length - telToString.Length; /*Código sem utilização*/
             string ddd = _telefone.Substring(0, 2);
 
             var telefone = new Telefone { celular = telToString, ddd = ddd };
 
-            var endereco = new Endereco { idEndereco = _cdEndereco, bairro = _bairro, cep = _cep, cidade = _cidade, estadoUTF = _estado, logradouro = _logradouro, numero = _numero };
+            var endereco = new Endereco { idEndereco = _cdEndereco, bairro = _bairro.ToUpper(), cep = _cep, cidade = _cidade.ToUpper(), estadoUF = _estado, logradouro = _logradouro.ToUpper(), numero = _numero };
 
             var professor = new Professor
             {
                 IdPessoa = _idProf,
-                Nome = _nome,
+                Nome = _nome.ToUpper(),
                 Endereco = endereco,
                 Telefone = telefone,
-                materia = _materia
+                materia = _materia.ToUpper()
             };
-            /*Não há validação se o usuário digitar um código já existente para usuário e/ou endereço*/
             Professores.Add(professor);
+            Console.WriteLine("Professor Cadastrado com sucesso!!");
+            Console.WriteLine("==================================================");
         }
-        public override object ObterTodos()
+        public override void ObterTodos()
         {
-            return Professores;
-        }
-        public override object ObterPorID()
-        {
-            Console.WriteLine("Digite a matrícula do Professor:");
-            /*O que acontece se eu digitar uma letra aqui? Seu codigo quebra!!!*/
-            var _id = int.Parse(Console.ReadLine());
-
-            var professor = Professores.FirstOrDefault(x => x.IdPessoa == _id);
-            /*E se não encontrar o professor?*/
-            return professor;
-        }
-
-        public void AtualizarNome(List<Professor> professores)
-        {
-            Console.WriteLine("Digite o cógigo do Professor: ");
-            var cdProfessor = int.Parse(Console.ReadLine());
-
-            var professorEncontrado = professores.FirstOrDefault(x => x.IdPessoa == cdProfessor);
-
-            if (professorEncontrado != null)
+            var listaOrdenada = Professores.OrderBy(c => c.Nome).ToList();
+            foreach (var item in listaOrdenada)
             {
-                var indice = professores.IndexOf(professorEncontrado);
-
-                Console.WriteLine("Nome atualizado do professor: ");
-                var _nomeAtual = Console.ReadLine();
-
-                professores[indice].Nome = _nomeAtual;
+                Console.WriteLine($"Nome: {item.Nome}\tMateria: {item.materia}\tID: {item.IdPessoa}");
+             
             }
-            else
+            if (listaOrdenada.Count == 0)
             {
-                Console.WriteLine("Código do professor não encontrado não encontrado...");
+                Console.WriteLine("Não existe nenhum professor cadastrado!");
             }
+            Console.WriteLine();
         }
-
-        public void AtualizarEndereco(List<Professor> professores)
+        public override void ObterPorID()
         {
-            Console.WriteLine("Digite o cógigo do Porfessor: ");
-            var cdProfessor = int.Parse(Console.ReadLine());
-
-            var professorEncontrado = professores.FirstOrDefault(x => x.IdPessoa == cdProfessor);
-
-            if (professorEncontrado != null)
+            var _id = 0;
+            while (true)
             {
-                var indice = professores.IndexOf(professorEncontrado);
-
-                Console.WriteLine("Atualizar endereco");
-                Console.WriteLine();
-                Console.WriteLine("1- CEP");
-                Console.WriteLine("2- Estado UTF");
-                Console.WriteLine("3- Cidade");
-                Console.WriteLine("4- Bairro");
-                Console.WriteLine("5- Logradouro");
-                Console.WriteLine("6- Número da Residência");
-                Console.WriteLine("7- Código do endereço"); /*Um código usado como identificação ou até mesmo modo de busca nunca é alterado*/
-
-
-                var escolha = Console.ReadLine();
-
-                if (escolha == "1")
+                Console.WriteLine("Digite o código do professor:");
+                var _profStr = Console.ReadLine();
+                if (!Regex.IsMatch(_profStr, @"^[0-9]+$"))
                 {
-                    Console.WriteLine("Digite o Cep: ");
-                    var _enderecoAtual = Console.ReadLine();
-                    string padraoCep = "[0 - 9]{ 2}[0 - 9]{ 3}[-]{ 0,1}[0 - 9]{ 3}";
-                    if (Regex.IsMatch(_enderecoAtual, padraoCep) == false)
-                    {
-                        Console.WriteLine("NÚMERO DE CEP INVÁLIDO!");
-                        Console.WriteLine("Ex: XXXXX-XXX");
-                    }
-                    professores[indice].Endereco.cep = _enderecoAtual;
+                    Console.WriteLine("Código aceita apenas números");
                 }
-                else if (escolha == "2")
+                else
                 {
-                    Console.WriteLine("Digite o Estado (UTF): ");
-                    var _enderecoAtual = Console.ReadLine();
+                    _id = int.Parse(_profStr);
 
-                    _enderecoAtual.ToUpper();
-                    string padraoUTF = "[A-Z]{2}";
-                    if (Regex.IsMatch(_enderecoAtual, padraoUTF) == false)
+                    var professor = Professores.FirstOrDefault(x => x.IdPessoa == _id);
+                    if (professor != null)
                     {
-                        Console.WriteLine("Estado, UTF inválido!");
-                        Console.WriteLine("Ex: SP ");
+                        Console.WriteLine($"Nome: {professor.Nome}\tMateria: {professor.materia}\tID: {professor.IdPessoa}");
+                        break;
                     }
                     else
                     {
-                        professores[indice].Endereco.estadoUTF = _enderecoAtual;
+                        Console.WriteLine(msg);
+                        break;
                     }
                 }
-                else if (escolha == "3")
+            }
+
+            Console.WriteLine();
+        }
+        public void AtualizarNome(List<Professor> professores)
+        {
+            var _id = 0;
+            while (true)
+            {
+                Console.WriteLine("Digite o código do professor:");
+                var _profStr = Console.ReadLine();
+                if (!Regex.IsMatch(_profStr, @"^[0-9]+$"))
                 {
-                    Console.WriteLine("Digite a cidade: ");
-                    var _enderecoAtual = Console.ReadLine();
-                    professores[indice].Endereco.cidade = _enderecoAtual;
-                }
-                else if (escolha == "4")
-                {
-                    Console.WriteLine("Digite o Bairro: ");
-                    var _enderecoAtual = Console.ReadLine();
-                    professores[indice].Endereco.bairro = _enderecoAtual;
-                }
-                else if (escolha == "5")
-                {
-                    Console.WriteLine("Digite a Rua: ");
-                    var _enderecoAtual = Console.ReadLine();
-                    professores[indice].Endereco.logradouro = _enderecoAtual;
-                }
-                else if (escolha == "6")
-                {
-                    Console.WriteLine("Digite o numero da residencia: ");
-                    var _enderecoAtual = int.Parse(Console.ReadLine());
-                    professores[indice].Endereco.numero = _enderecoAtual;
-                }
-                else if (escolha == "7")
-                {
-                    Console.WriteLine("Digite o código do endereço: ");
-                    var _enderecoAtual = int.Parse(Console.ReadLine());
-                    professores[indice].Endereco.numero = _enderecoAtual;
+                    Console.WriteLine("Código aceita apenas números");
                 }
                 else
                 {
-                    Console.WriteLine("OPÇÃO INVÁLIDA");
+                    _id = int.Parse(_profStr);
 
+                    var professorEncontrado = professores.FirstOrDefault(x => x.IdPessoa == _id);
+
+                    if (professorEncontrado != null)
+                    {
+                        while (true)
+                        {
+                            var indice = professores.IndexOf(professorEncontrado);
+
+                            Console.WriteLine("Nome atualizado do professor: ");
+                            var _nomeAtual = Console.ReadLine();
+                            if (Regex.IsMatch(_nomeAtual, @"^[a-zA-Z\x20]+$"))
+                            {
+                                Console.WriteLine($"Nome do(a) professor(a) {professorEncontrado.Nome} atualizado(a) com sucesso.");
+                                professores[indice].Nome = _nomeAtual.ToUpper();
+                                Console.WriteLine($"Nome atual é: {professorEncontrado.Nome} ");
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Digine apenas letras para o Nome");
+                                break;
+                            }
+                        }
+                        
+                    }
+                    else
+                    {
+                        Console.WriteLine("Código do professor não encontrado não encontrado...");
+                        break;
+                    }
                 }
+                break;
             }
-            else
+            Console.WriteLine();
+        }
+        public void AtualizarEndereco(List<Professor> professores)
+        {
+            var _id = 0;
+            while (true)
             {
-                Console.WriteLine("Código do professor não encontrado não encontrado..."); /*Se atente ao que está escrevendo*/
+                Console.WriteLine("Digite o código ddo professor:");
+                var _profStr = Console.ReadLine();
+                if (!Regex.IsMatch(_profStr, @"^[0-9]+$"))
+                {
+                    Console.WriteLine("Código aceita apenas números");
+                }
+                else
+                {
+                    _id = int.Parse(_profStr);
+
+                    var professorEncontrado = professores.FirstOrDefault(x => x.IdPessoa == _id);
+
+                    if (professorEncontrado != null)
+                    {
+                        var indice = professores.IndexOf(professorEncontrado);
+
+                        Console.WriteLine("Atualizar endereco");
+                        Console.WriteLine();
+                        Console.WriteLine("1- CEP");
+                        Console.WriteLine("2- Estado UF");
+                        Console.WriteLine("3- Cidade");
+                        Console.WriteLine("4- Bairro");
+                        Console.WriteLine("5- Logradouro");
+                        Console.WriteLine("6- Número da Residência");
+
+
+
+                        var escolha = Console.ReadLine();
+
+                        if (escolha == "1")
+                        {
+                            Console.WriteLine("Digite o Cep: ");
+                            var _enderecoAtual = Console.ReadLine();
+                            string padraoCep = @"^\d{5}[-]?\d{3}$";
+                            if (Regex.IsMatch(_enderecoAtual, padraoCep) == false)
+                            {
+                                Console.WriteLine("NÚMERO DE CEP INVÁLIDO!");
+                                Console.WriteLine("Ex: XXXXX-XXX");
+                            }
+                            else
+                            {
+                                professores[indice].Endereco.cep = _enderecoAtual;
+                                Console.WriteLine($"Cep do(a) professor(a) {professorEncontrado.Nome} atualizada com sucesso.");
+                            }
+                        }
+                        else if (escolha == "2")
+                        {
+                            string _enderecoAtual = "";
+                            while (true)
+                            {
+                                Console.WriteLine("Digite Estado UF:");
+                                _enderecoAtual = Console.ReadLine();
+                                var estado = _enderecoAtual.ToUpper();
+                                const string padraoUF = "^[A-T]{2}$";
+
+                                Match resultado = Regex.Match(estado, padraoUF);
+
+
+                                if (String.IsNullOrEmpty(resultado.ToString()))
+                                {
+                                    Console.WriteLine("Estado, UF inválido!");
+                                    Console.WriteLine("Ex: SP ");
+                                    Console.WriteLine();
+                                }
+                                else
+                                {
+                                    Professores[indice].Endereco.estadoUF = _enderecoAtual.ToUpper();
+                                    Console.WriteLine($"Estado do(a) professor(a) {professorEncontrado.Nome} atualizada com sucesso.");
+                                    break;
+                                }
+                            }
+                        }
+                        else if (escolha == "3")
+                        {
+                            var _enderecoAtual = "";
+                            while (true)
+                            {
+                                Console.WriteLine("Cidade Atual:");
+                                _enderecoAtual = Console.ReadLine();
+                                if (!Regex.IsMatch(_enderecoAtual, @"^[a-zA-Z\x20]+$"))
+                                {
+                                    Console.WriteLine("Digite apenas letras para o nome da cidade");
+                                }
+                                else
+                                {
+                                    professores[indice].Endereco.cidade = _enderecoAtual.ToUpper();
+                                    Console.WriteLine($"Cidade do(a) professor(a) {professorEncontrado.Nome} atualizada com sucesso.");
+                                    break;
+                                }
+                            }
+                        }
+                        else if (escolha == "4")
+                        {
+                            Console.WriteLine("Digite o Bairro: ");
+                            var _enderecoAtual = Console.ReadLine();
+                            professores[indice].Endereco.bairro = _enderecoAtual.ToUpper();
+                            Console.WriteLine($"Bairro do(a) professor(a) {professorEncontrado.Nome} atualizada com sucesso.");
+                        }
+                        else if (escolha == "5")
+                        {
+                            Console.WriteLine("Digite a Rua: ");
+                            var _enderecoAtual = Console.ReadLine();
+                            professores[indice].Endereco.logradouro = _enderecoAtual.ToUpper();
+                            Console.WriteLine($"Rua do(a) professor(a) {professorEncontrado.Nome} atualizada com sucesso.");
+                        }
+                        else if (escolha == "6")
+                        {
+                            var _numeroAtual = 0;
+                            while (true)
+                            {
+                                Console.WriteLine("Numero:");
+                                var _numeroStg = Console.ReadLine();
+                                if (Regex.IsMatch(_numeroStg, @"^[0-9]+$"))
+                                {
+                                    _numeroAtual = int.Parse(_numeroStg);
+                                    professores[indice].Endereco.numero = _numeroAtual;
+                                    Console.WriteLine($"Telefone do professor {professorEncontrado.Nome} atualizada com sucesso.");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("O número da residencia não pode letras nem decimais, somente número inteiro. ");
+                                }
+                            
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("OPÇÃO INVÁLIDA");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine(msg);
+                        break;
+                    }
+                    
+                }
+                break;
             }
+            Console.WriteLine();
 
         }
-
         public void AtualizarTelefone(List<Professor> professores)
         {
-            Console.WriteLine("Digite o cógigo do Professor: ");
-            var cdProfessor = int.Parse(Console.ReadLine());
-
-            var alunoEncontrado = professores.FirstOrDefault(x => x.IdPessoa == cdProfessor);
-
-            if (alunoEncontrado != null)
+            var _id = 0;
+            while (true)
             {
-                var indice = professores.IndexOf(alunoEncontrado);
-
-                Console.WriteLine("Atualizar telefone ");
-                Console.WriteLine();
-                /*Por que atualizar apenas o DDD ou apenas o número? Não faz sentido. Quando se faz a troca de um número você deve digitá-lo todo novamente*/
-                Console.WriteLine("1- Atualizar o DDD ");
-                Console.WriteLine("2-Atualizar Telfone ");
-                var escolha = Console.ReadLine();
-
-                if (escolha == "1")
+                Console.WriteLine("Digite o código do professor:");
+                var _profStr = Console.ReadLine();
+                if (!Regex.IsMatch(_profStr, @"^[0-9]+$"))
                 {
-                    Console.WriteLine("Digite o DDD ");
-                    var _telefoneAtual = Console.ReadLine();
-
-                    string padraoCelular = "[0 - 9]{ 2}";
-                    if (Regex.IsMatch(_telefoneAtual, padraoCelular) == false)
-                    {
-                        Console.WriteLine("NÚMERO DO DDD INVÁLIDO!");
-                        Console.WriteLine("Ex: xx ");
-                    }
-                    professores[indice].Telefone.ddd = _telefoneAtual;
-                }
-                else if (escolha == "2")
-                {
-                    Console.WriteLine("Digite o celular ");
-                    var _telefoneAtual = Console.ReadLine();
-
-                    string padraoCelular = "[0 - 9]{ 5}[-]{ 0,1}[0 - 9]{ 4}";
-                    if (Regex.IsMatch(_telefoneAtual, padraoCelular) == false)
-                    {
-                        Console.WriteLine("NÚMERO DE TELEFONE INVÁLIDO!");
-                        Console.WriteLine("Ex: XXXXXXX-XXXX");
-                    }
-
-                    professores[indice].Telefone.celular = _telefoneAtual;
+                    Console.WriteLine("Código aceita apenas números");
                 }
                 else
                 {
-                    Console.WriteLine("OPÇÃO INVÁLIDA");
+                    _id = int.Parse(_profStr);
+
+                    var professorEncontrado = Professores.FirstOrDefault(x => x.IdPessoa == _id);
+
+                    if (professorEncontrado != null)
+                    {
+                        var indice = Professores.IndexOf(professorEncontrado);
+
+                        Console.WriteLine("Atualizar telefone ");
+                        Console.WriteLine();
+                        string _telefoneAtual = "";
+                        while (true)
+                        {
+                            Console.WriteLine("Digite o Teleone:");
+                            _telefoneAtual = Console.ReadLine();
+
+                            string padraoCelular = @"^\d{6,7}[-]?\d{4}$";
+                            Match resultado = Regex.Match(_telefoneAtual, padraoCelular);
+
+                            if (String.IsNullOrEmpty(resultado.ToString()))
+                            {
+                                Console.WriteLine("NÚMERO DE TELEFONE INVÁLIDO!");
+                                Console.WriteLine("Ex: xxxxxx-xxxx");
+                            }
+                            else
+                            {
+                                string telToString = _telefoneAtual.Substring(3, 10);
+
+                                string ddd = _telefoneAtual.Substring(0, 2);
+
+                                var telefone = new Telefone { ddd = ddd, celular = telToString };
+                                Professores[indice].Telefone = telefone;
+                                Console.WriteLine($"Telefone do(a) professor(a) {professorEncontrado.Nome} atualizada com sucesso.");
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine(msg);
+                        break;
+                    }
                 }
-
+                break;
             }
-            else
-            {
-                Console.WriteLine("Código do aluno não encontrado não encontrado..."); /*Cuidado com o copiar e colar*/
-            }
+            Console.WriteLine();
         }
-
         public void AtualizarMateria(List<Professor> professores)
         {
-            Console.WriteLine("Digite o cógigo do Professor: ");
-            var cdProfessor = int.Parse(Console.ReadLine());
-
-            var professorEncontrado = professores.FirstOrDefault(x => x.IdPessoa == cdProfessor);
-
-            if (professorEncontrado != null)
+            var _id = 0;
+            while (true)
             {
-                var indice = professores.IndexOf(professorEncontrado);
-
-                Console.WriteLine("Atual Matéria aplicada pelo professor: ");
-                var _materiaAtual = Console.ReadLine();
-
-                professores[indice].materia = _materiaAtual;
-            }
-            else
-            {
-                Console.WriteLine("Código do professor não encontrado não encontrado...");
-            }
-        }
-        public void Excluir(List<Turma> turmas)
-        {
-            /*E se o professor estiver em uma turma?*/
-
-            Console.WriteLine("Digite o código do professor para removê-lo ");
-            var matricula = int.Parse(Console.ReadLine());
-
-            var professorEncontrado = Professores.FirstOrDefault(x => x.IdPessoa == matricula);
-            if (professorEncontrado != null)
-            {
-                //var indice = Professores.IndexOf(professorEncontrado);
-                if (Professores.Contains(professorEncontrado)) /*Essa validação não faz sentido. 
-                                                                * Você tem o professorEncontrado buscado de Professor, aí depois você vê se Professores tem o professorEncontrado*/
+                Console.WriteLine("Digite o código do professor:");
+                var _profStr = Console.ReadLine();
+                if (!Regex.IsMatch(_profStr, @"^[0-9]+$"))
                 {
-                    professorEncontrado.Professores.Remove(professorEncontrado);
+                    Console.WriteLine("Código aceita apenas números");
                 }
                 else
                 {
-                    Console.WriteLine("O professor está cadastrado em uma turma");
+                    _id = int.Parse(_profStr);
+
+                    var professorEncontrado = professores.FirstOrDefault(x => x.IdPessoa == _id);
+
+                    if (professorEncontrado != null)
+                    {
+                        var indice = professores.IndexOf(professorEncontrado);
+
+                        Console.WriteLine("Atual Matéria aplicada pelo professor: ");
+                        var _materiaAtual = Console.ReadLine();
+
+                        professores[indice].materia = _materiaAtual.ToUpper();
+                        Console.WriteLine($"Matéria do(a) professor(a) {professorEncontrado.Nome} atualizada com sucesso.");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine(msg);
+                        break;
+                    }
                 }
+                break;
             }
-            else
+            Console.WriteLine();
+        }
+        public override void Excluir(List<Turma> turmas)
+        {
+            var _id = 0;
+            while (true)
             {
-                Console.WriteLine("Código do professor não encontrado...");
+                Console.WriteLine("Digite o código do professor:");
+                var _profStr = Console.ReadLine();
+                if (!Regex.IsMatch(_profStr, @"^[0-9]+$"))
+                {
+                    Console.WriteLine("Código aceita apenas números");
+                }
+                else
+                {
+                    _id = int.Parse(_profStr);
+
+                    var professorEncontrado = Professores.FirstOrDefault(x => x.IdPessoa == _id);
+                    if (professorEncontrado != null)
+                    {
+                        var turmaEncontrada = turmas.FirstOrDefault(x => x.Professores.Contains(professorEncontrado));
+                        if (turmaEncontrada != null)
+                        {
+                            Console.WriteLine("O professor está cadastrado em uma turma.\nDeseja realmete excluí-lo da turma e da lista de Professores?");
+                            Console.WriteLine("============1-SIM       2-NÃO, Somente da Turma.");
+                            var escolha = Console.ReadLine();
+                            if (escolha == "1")
+                            {
+                                turmaEncontrada.Professores.Remove(professorEncontrado);
+                                Console.WriteLine($"Professor(a) removido(a) da turma..Id:{turmaEncontrada} com sucesso!");
+                                Professores.Remove(professorEncontrado);
+                                Console.WriteLine("Professor removido da lista de professores com sucesso!");
+                            }
+                            else if (escolha == "2")
+                            {
+                                turmaEncontrada.Professores.Remove(professorEncontrado);
+                                Console.WriteLine($"Professor(a) removido(a) da turma..Id:{turmaEncontrada} com sucesso!");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("O(a) professor(a) não está cadatrado em nenhuma turma..");
+                            Professores.Remove(professorEncontrado);
+                            Console.WriteLine("Professor(a) removido(a) da lista de professores com sucesso!");
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine(msg);
+                        break;
+                    }
+                }
+                break;
             }
+            Console.WriteLine();
+
+        }
+        public override void Cadastrar(List<Turma> turmas)
+        {
+            throw new NotImplementedException();
         }
     }
 }
